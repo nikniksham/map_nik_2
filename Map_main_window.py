@@ -6,7 +6,7 @@ import pygame
 
 # Получаем актуальные размеры экрана, и создаём приложение
 # size_screen = (GetSystemMetrics(0), GetSystemMetrics(1))
-size_screen = (1000, 800)
+size_screen = (800, 600)
 pygame.init()
 screen = pygame.display.set_mode(size_screen)
 
@@ -29,7 +29,7 @@ params = {
     "size": "400,400"
 }
 
-map = Map((4000, 6005))
+map = Map()
 application.add_widget(map, 0)
 # x
 # min 0

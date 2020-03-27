@@ -443,7 +443,7 @@ class Application:
     # создание экрана
     def set_screen(self, size, full_screen=False):
         # экран
-        self.screen = pygame.display.set_mode(size, pygame.FULLSCREEN if full_screen else pygame.RESIZABLE)
+        self.screen = pygame.display.set_mode(size)
         self.screen.fill(self.fill_color)
         # развёрнут на весь экран
         self.full_screen = full_screen

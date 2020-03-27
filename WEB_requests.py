@@ -30,7 +30,9 @@ class WebLoad(ThreadApp):
 
     def download_file(self):
         """Скачиваем файл"""
+        print("start")
         self.res = requests.get(self.url, params=self.params)
+        print("loaded")
 
 
 class LoadChunk(WebLoad):
@@ -42,8 +44,3 @@ class LoadChunk(WebLoad):
         res = self.res
         self.res = None
         return (res, self.coord)
-
-
-class LoadMap(ThreadApp):
-    def __init__(self, map_widget):
-        pass
