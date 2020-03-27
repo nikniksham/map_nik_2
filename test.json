@@ -1,0 +1,71 @@
+{
+    "response": {
+        "GeoObjectCollection": {
+            "metaDataProperty": {
+                "GeocoderResponseMetaData": {
+                    "boundedBy": {
+                        "Envelope": {
+                            "lowerCorner": "37.038186 55.312148",
+                            "upperCorner": "38.2026 56.190802"
+                        }
+                    },
+                    "request": "город Москва",
+                    "results": "10",
+                    "found": "1"
+                }
+            },
+            "featureMember": [
+                {
+                    "GeoObject": {
+                        "metaDataProperty": {
+                            "GeocoderMetaData": {
+                                "precision": "other",
+                                "text": "Россия, Москва",
+                                "kind": "province",
+                                "Address": {
+                                    "country_code": "RU",
+                                    "formatted": "Россия, Москва",
+                                    "Components": [
+                                        {
+                                            "kind": "country",
+                                            "name": "Россия"
+                                        },
+                                        {
+                                            "kind": "province",
+                                            "name": "Центральный федеральный округ"
+                                        },
+                                        {
+                                            "kind": "province",
+                                            "name": "Москва"
+                                        }
+                                    ]
+                                },
+                                "AddressDetails": {
+                                    "Country": {
+                                        "AddressLine": "Россия, Москва",
+                                        "CountryNameCode": "RU",
+                                        "CountryName": "Россия",
+                                        "AdministrativeArea": {
+                                            "AdministrativeAreaName": "Москва"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "name": "Москва",
+                        "description": "Россия",
+                        "boundedBy": {
+                            "Envelope": {
+                                "lowerCorner": "36.803259 55.142221",
+                                "upperCorner": "37.96779 56.021281"
+                            }
+                        },
+                        "Point": {
+                            "pos": "37.622504 55.753215"
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}
