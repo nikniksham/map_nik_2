@@ -12,7 +12,7 @@ class Map(Widget):
         super().__init__(Surface((100, 100)), (0, 0), size=(800, 600))
         self.app = app
         # координаты
-        self._coord = [0, 0]
+        self._coord = [35, 45]
         # зум
         self._zoom = 10
         # тип карты
