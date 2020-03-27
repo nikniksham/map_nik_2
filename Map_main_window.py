@@ -20,23 +20,6 @@ push_active = check_image('Widget_image/Button/delet_active.png', color_key=-1)
 push_on = check_image('Widget_image/Button/delet_on.png', color_key=-1)
 push_button = Button([push_off, push_active, push_on], text_widget.delete_text, [0.25, 0], name='delete_button')
 api_server = "http://static-maps.yandex.ru/1.x/"
-print('generate')
-params = {
-    "ll": '0.0,0.0',
-    'spn': "10.0,10.0",
-    "l": "sat,skl",
-    "z": "5",
-    "size": "400,400"
-}
-
-map = Map()
-application.add_widget(map, 0)
-# x
-# min 0
-# max 8230
-# y
-# min 0
-# max 7905
 create = False
 if create:
     name_image = ['_off.png', '_on.png', '_active.png']
@@ -52,8 +35,10 @@ map_radio_button = RadioButton(['Widget_image/Button/map_off.png', 'Widget_image
 sat_skl_radio_button = RadioButton(['Widget_image/Button/sat_skl_off.png', 'Widget_image/Button/sat_skl_active.png',
                                     'Widget_image/Button/sat_skl_on.png'], None, (0.9, 0), 'sat,skl')
 radio_list = RadioButtons([sat_radio_button, map_radio_button, sat_skl_radio_button])
-map.add_type(radio_list)
+map = Map(application)
+map.set_radio_button(radio_list)
 map_radio_button.s_p()
+application.add_widget(map, 0)
 application.add_widget(sat_radio_button, 2)
 application.add_widget(map_radio_button, 2)
 application.add_widget(sat_skl_radio_button, 2)
