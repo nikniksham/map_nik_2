@@ -30,9 +30,7 @@ class WebLoad(ThreadApp):
 
     def download_file(self):
         """Скачиваем файл"""
-        print("start")
         self.res = requests.get(self.url, params=self.params)
-        print("loaded")
 
 
 class LoadChunk(WebLoad):
