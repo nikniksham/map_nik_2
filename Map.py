@@ -59,12 +59,11 @@ class Map(Widget):
     def add_image(self, request: requests, info):
         # проверка на нужность
         if info[0] in [self._coord[0] + self._zoom * i for i in [-1, 1]] or info[1] in \
-           [self._coord[1] + self._zoom * i for i in [-1, 1]] or self._coord == info[:2]:
+           [self._coord[1] + self._zoom * i for i in [-1, 1]] or tuple(self._coord) == info[:2]:
             if info[2] == self._zoom and info[3] == self._type:
                 # если работаает
                 if request.status_code == 200:
-                    self._images[info[:3]] = image.load(BytesIO(request.content))
-                    print(f"add {info[:3]}, {self._images[info[:3]]}")
+                    self._images[info[:2]] = image.load(BytesIO(request.content))
                 else:
                     raise Exception(f"Что-то пошло не так фрейм не загрузился")
 
@@ -80,6 +79,7 @@ class Map(Widget):
                 "size": "600,450"
             }
             self.app.add_thread(LoadChunk(self.api_server, params, self.add_image, (_coord[0], _coord[1], self._zoom, self._type)))
+            self.loads.append((_coord[0], _coord[1], self._zoom, self._type))
         for _y in [1, -1]:
             _coord = self._coord[0], self._coord[1] + self._zoom * _y
             if (_coord[0], _coord[1], self._zoom, self._type) not in self.loads:
