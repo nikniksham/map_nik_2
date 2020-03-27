@@ -52,7 +52,7 @@ map_radio_button = RadioButton(['Widget_image/Button/map_off.png', 'Widget_image
 sat_skl_radio_button = RadioButton(['Widget_image/Button/sat_skl_off.png', 'Widget_image/Button/sat_skl_active.png',
                                     'Widget_image/Button/sat_skl_on.png'], None, (0.9, 0), 'sat,skl')
 radio_list = RadioButtons([sat_radio_button, map_radio_button, sat_skl_radio_button])
-map.add_mod(radio_list)
+map.add_type(radio_list)
 map_radio_button.s_p()
 application.add_widget(sat_radio_button, 2)
 application.add_widget(map_radio_button, 2)

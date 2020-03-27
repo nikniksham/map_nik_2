@@ -637,21 +637,15 @@ class Application:
         pygame.mouse.set_visible(True)
         self.mouse_image = None
 
-    #
-    # не лезь оно тебя сожрёт
-    # внутреняя логика
-    #
     def draw_mouse(self):
-        """не лезь
-        отрисовываем мышь"""
+        """отрисовываем мышь"""
         # отрисовка мыши
         if self.mouse_image is not None:
             self.mouse_rect.x, self.mouse_rect.y = pygame.mouse.get_pos()
             self.screen.blit(self.mouse_image, self.mouse_rect)
 
     def update_screen(self, width, height):
-        """не лезь
-        обновляем виджеты
+        """обновляем виджеты
         width - ширина
         height - высота"""
         self.set_screen((width, height), self.get_full_screen())
@@ -660,8 +654,7 @@ class Application:
 
     # main loop
     def run(self):
-        """не лезь
-        основной цикл"""
+        """основной цикл"""
         # основной цикл
         while self.running:
             if len(self.pressed_key) != 0:
@@ -709,12 +702,10 @@ class Application:
             # print(len(self.threads), 'threads')
             for widget in self.get_widgets():
                 self.render(widget)
-            self.threads_break = True
-            if self.threads_break:
-                for i in range(len(self.threads) - 1, -1, -1):
-                    if not self.threads[i].get_status():
-                        self.threads[i].join()
-                        self.threads.pop(i)
+            for i in range(len(self.threads) - 1, -1, -1):
+                if not self.threads[i].get_status():
+                    self.threads[i].join()
+                    self.threads.pop(i)
             # отрисовка мыши
             self.draw_mouse()
             # обновление экрана
@@ -729,8 +720,7 @@ class Application:
 
     # отрисовка экрана
     def render(self, widget):
-        """не лезь
-        отрисовка виджета
+        """отрисовка виджета
         widget - виджет который надо отрисовать"""
         if issubclass(type(widget), AnimationWidgets):
             if self.FPS != 0:
@@ -748,8 +738,7 @@ class Application:
 
     # обработчик событий мыши
     def set_active_widgets(self, event):
-        """не лезь
-        задать виджет кативным"""
+        """задать виджет кативным"""
         pos = event.pos
         good = False
         for widget in self.get_widgets(reverse=True):
@@ -760,8 +749,7 @@ class Application:
                     good = True
 
     def mouse_key_event(self, event):
-        """не лезь
-        обработка событий мыши"""
+        """обработка событий мыши"""
         # asd
         if event.button == 1 and event.type == pygame.MOUSEBUTTONUP:
             self.widget_event(event)
@@ -770,8 +758,7 @@ class Application:
 
     # обработчик всех событий мыши кроме нажатия левой кнопкой мыши
     def mouse_event(self, event):
-        """не лезь
-        обработка всех событий мыши кроме нажатия левой кнопки мыши"""
+        """обработка всех событий мыши кроме нажатия левой кнопки мыши"""
         if event.button in [4, 5]:
             for widget in self.get_widgets(reverse=True):
                 if widget.get_active() and widget.get_is_zooming():
@@ -795,8 +782,7 @@ class Application:
     #
     # получает события клавиатуры
     def get_key_pressed_event(self, event):
-        """не лезь
-        обновление кнопок клавиатуры"""
+        """обновление кнопок клавиатуры"""
         self.widget_event(event)
 
     # проверить нажата ли кнопка клавиатуры

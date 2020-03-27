@@ -12,7 +12,7 @@ class Map(Widget):
         super().__init__(Surface((100, 100)), (0, 0), size=(800, 600))
         self.app = app
         # координаты
-        self._coord = [35, 45]
+        self._coord = [37.62, 55.75]
         # зум
         self._zoom = 10
         # тип карты
@@ -38,22 +38,27 @@ class Map(Widget):
 
     def move_left(self):
         """Сместить карту влево на зум"""
-        self._coord[0] -= self._zoom
+        self._coord[0] -= self.zoom
         self.update_map()
 
     def move_right(self):
         """Сместить карту вправо на зум"""
-        self._coord[0] += self._zoom
+        self._coord[0] += self.zoom
         self.update_map()
 
     def move_up(self):
         """Сместить карту вверх на зум"""
-        self._coord[1] -= self._zoom
+        self._coord[1] += self.zoom
         self.update_map()
 
     def move_down(self):
         """Сместить карту вниз на зум"""
-        self._coord[1] += self._zoom
+        self._coord[1] -= self.zoom
+        self.update_map()
+
+    def add_type(self, type):
+        """Ожидается RadioButtons чтобы получить режим карты"""
+        self._type = type
         self.update_map()
 
     def add_image(self, request: requests, info):
@@ -78,6 +83,16 @@ class Map(Widget):
                 "z": self._zoom,
                 "size": "600,450"
             }
+            self.app.add_thread(request = requests.get(
+                f'https://geocode-maps.yandex.ru/1.x/?apikey=40d1649f-0493-4b70-98ba-98533de7710b'
+                f'&geocode={self._coord[0]},{self._coord[1]}&format=json'))
+            request = requests.get(
+                f'https://geocode-maps.yandex.ru/1.x/?apikey=40d1649f-0493-4b70-98ba-98533de7710b'
+                f'&geocode={self._coord[0]},{self._coord[1]}&format=json')
+            if request.status_code == 200:
+                metro = \
+                request.json()['response']["GeoObjectCollection"]["featureMember"][0]["GeoObject"]["metaDataProperty"][
+                    "GeocoderMetaData"]["Address"]["Components"]
             self.app.add_thread(LoadChunk(self.api_server, params, self.add_image, (_coord[0], _coord[1], self._zoom, self._type)))
             self.loads.append((_coord[0], _coord[1], self._zoom, self._type))
         for _y in [1, -1]:
@@ -104,18 +119,35 @@ class Map(Widget):
                 self.loads.append((_coord[0], _coord[1], self._zoom, self._type))
         # генерация изображения
         try:
-            self.set_image(self._images[tuple(self._coord)])
-        except Exception:
-            self.set_image(Surface((600, 450)))
+            if len(self.app.threads) == 0:
+                self.set_image(self._images[tuple(self._coord)])
+        except Exception as error:
+            self.set_image(Surface((800, 600)))
+            print(f'Произошла ошибка: {type(error)}')
 
     # для тестов
     def get_surface(self):
         self.update_map()
         return self.image
 
+    def update(self, event):
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_RIGHT:
+                self.move_right()
+            if event.key == pygame.K_LEFT:
+                self.move_left()
+            if event.key == pygame.K_UP:
+                self.move_up()
+            if event.key == pygame.K_DOWN:
+                self.move_down()
+            if event.key == pygame.K_PAGEUP:
+                self.zoom_out()
+            if event.key == pygame.K_PAGEDOWN:
+                self.zoom_in()
+
 
 if __name__ == '__main__':
-    app = Application((500, 500))
+    app = Application((800, 600))
     map = Map(app)
     app.add_widget(map)
     app.run()
