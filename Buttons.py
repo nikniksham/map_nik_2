@@ -36,11 +36,14 @@ class Button(Widget):
             if self.type_button == 'Push':
                 self.pressed = event.button == 1 and self.rect.collidepoint(event.pos)
         if self.type_button == 'Toggle':
-            if event.button == 1:
-                if self.pressed:
-                    self.pressed = not self.pressed
-                else:
-                    self.pressed = self.rect.collidepoint(event.pos)
+            if self.active:
+                print(self.active)
+                if event.button == 1:
+                    if self.pressed:
+                        self.pressed = False
+                        self.action()
+                    else:
+                        self.pressed = self.rect.collidepoint(event.pos)
         if self.type_button == 'Radio':
             if event.button == 1 and self.rect.collidepoint(event.pos):
                 self.pressed = True
@@ -145,7 +148,7 @@ class TextWidget(Button):
         if json_response.status_code == 200:
             if len(json_response.json()['response']['GeoObjectCollection']['featureMember']) > 0:
                 coord = json_response.json()['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']["Point"]["pos"].split()
-                self.app.get_map().go_to_point([float(coord[0]), float(coord[1])])
+                self.app.get_map().go_to_point([float(coord[0]), float(coord[1])], obj=json_response.json()['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['metaDataProperty']['GeocoderMetaData']['Address'])
 
     def get_normal_text(self):
         """Эта функция возвращает текст для вывода"""
@@ -157,6 +160,7 @@ class TextWidget(Button):
 
     def delete_text(self):
         self.text = ''
+        self.app.get_map().delete_marks()
         self.generate_image()
 
     def generate_image(self):

@@ -24,6 +24,7 @@ class Map(Widget):
         self._images = {}
         # метки на карте
         self._marks = []
+        self.obj = None
         # список загружаемых изображений
         self.loads = []
         # адресс апи сервиса
@@ -107,8 +108,11 @@ class Map(Widget):
                 else:
                     self.update_map()
 
-    def go_to_point(self, coord, marks=None):
+    def go_to_point(self, coord, marks=None, obj=None):
         """Спозиционировать карту на метке"""
+        self.clear()
+        if obj is not None:
+            self.obj = obj
         self._coord = coord
         if marks is None:
             self._marks = [self._coord[:]]
@@ -118,6 +122,7 @@ class Map(Widget):
 
     def delete_marks(self):
         """Отчищает список меток"""
+        self.clear()
         self._marks = []
 
     def update_map(self):
@@ -175,6 +180,7 @@ class Map(Widget):
         return self.image
 
     def update(self, event):
+        self.app.information_widget.set_visible(True if len(self._marks) > 0 else False, self.obj)
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RIGHT:
                 self.move_right()

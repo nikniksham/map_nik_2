@@ -464,16 +464,17 @@ class Application:
         # нажатые клавиши мыши
         self.write_tik = 0
         self.pressed_mouse_button = []
-        # виджеты ключь=слой значение [виджеты]
+        # виджеты ключ = слой значение [виджеты]
         self.widgets = {}
         self.index_layers = []
-        # аудио байлы
+        # аудио файлы
         self.audios = []
         # события функции
         self.events = []
+        self.information_widget = None
         # потоки
         self.threads = []
-        # поток(и) закончил работу
+        # поток(и)закончил работу
         self.threads_break = False
         # анимационные виджеты
         self.animations = []
@@ -663,6 +664,9 @@ class Application:
         for widget in self.get_widgets():
             widget.set_position(width, height)
 
+    def set_information_widget(self, information_widget):
+        self.information_widget = information_widget
+
     # main loop
     def run(self):
         """основной цикл"""
@@ -810,3 +814,40 @@ class Application:
     def get_pressed_key(self):
         """получить нажатые кнопки клавиатуры"""
         return self.pressed_key
+
+
+class InformationWidget(Widget):
+    def __init__(self, size, coord, choice=False, visible=False, index_button=None, color=(255, 255, 255)):
+        self.image = (Smooth((0, 0), size, 10)).generate_smooth()
+        self.index_button = index_button
+        self.color = color
+        self.visible = visible
+        self.choice = choice
+        self.obj = None
+        super().__init__(self.image, coord)
+
+    def set_index_button(self, button):
+        self.index_button = button
+
+    def generate_image(self):
+        self.image = Smooth((0, 0), (240, 200), 10, [255, 255, 255]).generate_smooth()
+        self.coord = [0, 0.05]
+        if self.obj is not None:
+            text_1 = TextBox(20, self.obj['formatted'], (1, 1, 1)).get_image()
+            self.image.blit(text_1, [10, 10])
+            if self.choice:
+                if 'postal_code' in list(self.obj.keys()):
+                    text_2 = TextBox(20, self.obj['postal_code'], (1, 1, 1)).get_image()
+                    self.image.blit(text_2, (10, 30))
+        if not self.visible:
+            self.coord = [1, 1]
+        self.set_image(self.image)
+
+    def set_visible(self, visible: bool, obj=None):
+        self.obj = obj
+        self.visible = visible
+        self.generate_image()
+
+    def set_choice(self):
+        self.choice = self.index_button.get_pressed()
+        self.generate_image()
