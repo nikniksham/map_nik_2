@@ -24,7 +24,7 @@ rus_text = {'`': 'ё', 'q': 'й', 'w': 'ц', 'e': 'у', 'r': 'к', 't': 'е', 'y
             '.': 'ю'}
 good_symbols = ['`', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', 'a', 's', 'd', 'f',
                 'g', 'h', 'j', 'k', 'l', ';', "'", 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '0',
-                '1', '2', '3', '4', '5', '6', '7', '8', '9', '-']
+                '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '"', '(', ')']
 pygame.init()
 # Константы
 FONT_STYLE = 'data/Font/NeogreyMedium.otf'
@@ -462,6 +462,7 @@ class Application:
         # нажатые клавиши клавиатуры
         self.pressed_key = []
         # нажатые клавиши мыши
+        self.write_tik = 0
         self.pressed_mouse_button = []
         # виджеты ключь=слой значение [виджеты]
         self.widgets = {}
@@ -673,6 +674,7 @@ class Application:
                         widget.update(Event('buttons'))
             # print(len(self.threads), 'thread')
             # обробатываем события
+            self.write_tik += 1
             for event in pygame.event.get():
                 # событие закрытия
                 if event.type == pygame.QUIT:
@@ -697,6 +699,10 @@ class Application:
                     self.get_key_pressed_event(event)
                 # событие отжатия клавиши мыши
                 if event.type == pygame.MOUSEBUTTONUP:
+                    if event.button == 4:
+                        self.map.zoom_in()
+                    if event.button == 5:
+                        self.map.zoom_out()
                     if event.button in self.pressed_mouse_button:
                         self.pressed_mouse_button.remove(event.button)
                     self.mouse_key_event(event)

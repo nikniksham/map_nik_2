@@ -103,8 +103,7 @@ class Map(Widget):
                 if request.status_code == 200:
                     self._images[info[:2]] = image.load(BytesIO(request.content))
                 else:
-                    pass
-                    # print(f"Что-то пошло не так фрейм не загрузился")
+                    self.update_map()
 
     def go_to_point(self, coord):
         self._coord = coord

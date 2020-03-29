@@ -94,7 +94,7 @@ class TextWidget(Button):
             self.image = check_image(image, 'image_text_widget')
         self.action = self.write_text
         self.pressed = False
-        self.tick = 0
+        self.last_key = ''
         self.len_text = 0
         self.text = ''
         super().__init__([self.image] * 2, self.write_text, coord)
@@ -121,18 +121,22 @@ class TextWidget(Button):
                 return
             if key_name in good_symbols and self.len_text <= 16000:
                 # Проверка раскладки
-                if get_lang() == 'eng':
+                if get_lang() == 'eng' and key_name != self.last_key:
                     self.text += key_name
-                if get_lang() == 'ru':
+                if get_lang() == 'ru' and key_name != self.last_key:
                     if key_name in list(rus_text.keys()):
-                        self.text += rus_text[key_name]
+                        if rus_text[key_name] != self.last_key:
+                            self.text += rus_text[key_name]
                     else:
                         self.text += key_name
-            if key_name == 'space' and self.len_text <= 16000:
+            if key_name == 'space' and self.len_text <= 16000 and key_name != self.last_key:
                 self.text += ' '
-            if key_name == 'backspace':
-                if len(self.text) >= 0:
-                    self.text = self.text[:-1]
+            if key_name == 'backspace' and len(self.text) >= 0:
+                self.text = self.text[:-1]
+            self.last_key = key_name
+            if get_lang() == 'ru':
+                if key_name in list(rus_text.keys()):
+                    self.last_key = rus_text[key_name]
 
     def search_point(self):
         json_response = requests.get(
@@ -168,14 +172,13 @@ class TextWidget(Button):
 
     def update(self, *args):
         """Обновление текстового виджета"""
-        event = args[0]
-        self.tick += 1
-        if self.tick >= 10:
+        if self.app.write_tik >= 10:
+            event = args[0]
             if event.type == 'buttons' and self.get_pressed() or self.active:
-                self.tick = 0
                 self.write_text(self.app.pressed_key)
             self.generate_image()
-        self.set_pressed(event)
+            self.set_pressed(event)
+            self.app.write_tik = 0
 
 
 class Slider(Widget):
