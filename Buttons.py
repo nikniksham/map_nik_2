@@ -116,6 +116,7 @@ class TextWidget(Button):
         # подключается словарь "мазахиста"
         for key in keys:
             key_name = pygame.key.name(key)
+            self.app.write_tik = 0
             if key_name == 'return':
                 self.set_active(False)
                 return
@@ -172,13 +173,14 @@ class TextWidget(Button):
 
     def update(self, *args):
         """Обновление текстового виджета"""
+        if self.app.write_tik >= 20:
+            self.last_key = ''
         if self.app.write_tik >= 10:
             event = args[0]
             if event.type == 'buttons' and self.get_pressed() or self.active:
                 self.write_text(self.app.pressed_key)
             self.generate_image()
             self.set_pressed(event)
-            self.app.write_tik = 0
 
 
 class Slider(Widget):
