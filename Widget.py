@@ -5,6 +5,7 @@ import os
 from threading import Thread
 from pygame.draw import *
 from ctypes import *
+import requests
 # Импортируем всё необходимое
 
 
@@ -23,7 +24,7 @@ rus_text = {'`': 'ё', 'q': 'й', 'w': 'ц', 'e': 'у', 'r': 'к', 't': 'е', 'y
             '.': 'ю'}
 good_symbols = ['`', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', 'a', 's', 'd', 'f',
                 'g', 'h', 'j', 'k', 'l', ';', "'", 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '0',
-                '1', '2', '3', '4', '5', '6', '7', '8', '9']
+                '1', '2', '3', '4', '5', '6', '7', '8', '9', '-']
 pygame.init()
 # Константы
 FONT_STYLE = 'data/Font/NeogreyMedium.otf'
@@ -81,6 +82,7 @@ class Smooth:
         self.color = color
         # Режим отладки выводит отладочную иномацию
         self.test = False
+        self.api_server = "http://static-maps.yandex.ru/1.x/"
 
     def set_pos(self, pos):
         """Задать позицию"""
@@ -397,8 +399,9 @@ class Widget:
 
     # устнавить активным виджет
     def set_active(self, pos):
-        self.active = self.rect.collidepoint(pos)
-        return self.rect.collidepoint(pos)
+        if type(pos) in [list, tuple]:
+            self.active = self.rect.collidepoint(pos)
+            return self.rect.collidepoint(pos)
 
     # получить эзображение
     def get_surface(self):
@@ -484,6 +487,13 @@ class Application:
         # список картинок мыши
         self.mouse_images = []
         self.mouse_rect = pygame.Rect(0, 0, 0, 0)
+        self.map = None
+
+    def set_map(self, _map):
+        self.map = _map
+
+    def get_map(self):
+        return self.map
 
     def get_size(self, x, y):
         return [round(self.size_screen[0] * x), round(self.size_screen[1] * y)]

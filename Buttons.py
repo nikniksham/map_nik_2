@@ -134,6 +134,14 @@ class TextWidget(Button):
                 if len(self.text) >= 0:
                     self.text = self.text[:-1]
 
+    def search_point(self):
+        json_response = requests.get(
+            f'https://geocode-maps.yandex.ru/1.x/?apikey=40d1649f-0493-4b70-98ba-98533de7710b&geocode={self.text}&format=json')
+        if json_response.status_code == 200:
+            if len(json_response.json()['response']['GeoObjectCollection']['featureMember']) > 0:
+                coord = json_response.json()['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']["Point"]["pos"].split()
+                self.app.get_map().go_to_point([float(coord[0]), float(coord[1])])
+
     def get_normal_text(self):
         """Эта функция возвращает текст для вывода"""
         return self.text
@@ -151,8 +159,8 @@ class TextWidget(Button):
                        (200, 200, 200)).generate_smooth()
         text = TextBox(self.app.get_size(0.3, 0.035)[1], self.get_normal_text(), color=(10, 10, 10)).get_image()
         self.len_text = text.get_width()
-        image.blit(text, [10, 0], ((text.get_width() - self.app.get_size(0.24, 0)[0], 0),
-                                   self.app.get_size(0.24, 0.05)))
+        image.blit(text, [10, 0], ((text.get_width() - self.app.get_size(0.21, 0)[0], 0),
+                                   self.app.get_size(0.21, 0.05)))
         if image.get_width() != self.image.get_width() or image.get_height() != self.image.get_height():
             self.image = image
             self.rect = self.image.get_rect()
@@ -162,7 +170,7 @@ class TextWidget(Button):
         """Обновление текстового виджета"""
         event = args[0]
         self.tick += 1
-        if self.tick >= 7:
+        if self.tick >= 10:
             if event.type == 'buttons' and self.get_pressed() or self.active:
                 self.tick = 0
                 self.write_text(self.app.pressed_key)

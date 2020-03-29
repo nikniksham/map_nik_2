@@ -106,6 +106,10 @@ class Map(Widget):
                     pass
                     # print(f"Что-то пошло не так фрейм не загрузился")
 
+    def go_to_point(self, coord):
+        self._coord = coord
+        self.update_map()
+
     def update_map(self):
         """обновление и генерация кадра"""
         # загрузка новых кадров
