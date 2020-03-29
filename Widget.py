@@ -817,8 +817,8 @@ class Application:
 
 
 class InformationWidget(Widget):
-    def __init__(self, size, coord, choice=False, visible=False, index_button=None, color=(255, 255, 255)):
-        self.image = (Smooth((0, 0), size, 10)).generate_smooth()
+    def __init__(self, coord, choice=False, visible=False, index_button=None, color=(255, 255, 255)):
+        self.image = (Smooth((0, 0), (240, 200), 10)).generate_smooth()
         self.index_button = index_button
         self.color = color
         self.visible = visible
@@ -832,13 +832,19 @@ class InformationWidget(Widget):
     def generate_image(self):
         self.image = Smooth((0, 0), (240, 200), 10, [255, 255, 255]).generate_smooth()
         self.coord = [0, 0.05]
+        y = 10
+        x = 0
         if self.obj is not None:
             text_1 = TextBox(20, self.obj['formatted'], (1, 1, 1)).get_image()
-            self.image.blit(text_1, [10, 10])
+            #  ((text.get_width() - self.app.get_size(0.21, 0)[0], 0), self.app.get_size(0.21, 0.05))
+            while x <= text_1.get_width():
+                self.image.blit(text_1, [10, y], ((x, 0), (x + 220, 30)))
+                y += 30
+                x += 220
             if self.choice:
                 if 'postal_code' in list(self.obj.keys()):
                     text_2 = TextBox(20, self.obj['postal_code'], (1, 1, 1)).get_image()
-                    self.image.blit(text_2, (10, 30))
+                    self.image.blit(text_2, (10, y))
         if not self.visible:
             self.coord = [1, 1]
         self.set_image(self.image)
