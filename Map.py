@@ -22,6 +22,8 @@ class Map(Widget):
         self._type = "map"
         # список изображений
         self._images = {}
+        # метки на карте
+        self._marks = []
         # список загружаемых изображений
         self.loads = []
         # адресс апи сервиса
@@ -103,12 +105,20 @@ class Map(Widget):
                 if request.status_code == 200:
                     self._images[info[:2]] = image.load(BytesIO(request.content))
                 else:
-                    pass
-                    # print(f"Что-то пошло не так фрейм не загрузился")
+                    print(1)
 
-    def go_to_point(self, coord):
+    def go_to_point(self, coord, marks=None):
+        """Спозиционировать карту на метке"""
         self._coord = coord
+        if marks is None:
+            self._marks = [self._coord[:]]
+        else:
+            self._marks = marks
         self.update_map()
+
+    def delete_marks(self):
+        """Отчищает список меток"""
+        self._marks = []
 
     def update_map(self):
         """обновление и генерация кадра"""
@@ -122,6 +132,8 @@ class Map(Widget):
                 "z": self._zoom,
                 "size": "600,450"
             }
+            if len(self._marks) > 0:
+                params["pt"] = "~".join([f"{x},{y},pm2rdm" for x, y in self._marks])
             self.app.add_thread(
                 LoadChunk(self.api_server, params, self.add_image, (_coord[0], _coord[1], self._zoom, self._type)))
             self.loads.append((_coord[0], _coord[1], self._zoom, self._type))
